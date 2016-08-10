@@ -31,3 +31,9 @@ The **kernal** is the one program running at all times on the computer. It loads
 **Modular** design only loads components when needed.
 
 **Microkernals** includes the minimal amount of components in the operating system and all other components are user processes.
+
+## Processes
+
+A **process** is a program in execution.
+
+A **process control block** (PCB) includes the process state, program counter, CPU registers, CPU-scheduling information and memory-management information, accounting information and I/O status information.
