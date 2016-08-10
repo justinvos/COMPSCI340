@@ -23,3 +23,11 @@ The **application programs** define that ways in which these resources are used 
 The **bootstrap program** or **firmware** is the initial program that is run when the computer is powered on. It is typically stored in ROM (read-only memory) or EEPROM (electrically erasable programmable read-only memory). It then locates the operating system kernal and loads it into memory.
 
 The **kernal** is the one program running at all times on the computer. It loads system processes and system daemons.
+
+**Monolithic** design has all components in one, allowing them to freely interact with each other.
+
+**Onion-layer** design seperates the components into various layers which simplifies verificaition, debugging but can be inefficient with lots of layers to traverse through.
+
+**Modular** design only loads components when needed.
+
+**Microkernals** includes the minimal amount of components in the operating system and all other components are user processes.
