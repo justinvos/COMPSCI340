@@ -1,4 +1,7 @@
+import json
 import os
+import sys
+import time
 
 class Message:
     def __init__(self, label, action=None, guard=None):
@@ -9,7 +12,7 @@ class Message:
 
 class MessageProc:
 
-    def start(self):
+    def start(self, *args):
         pid = os.fork()
         if pid == 0:
             self.main()
@@ -17,20 +20,30 @@ class MessageProc:
             return pid
 
     def main(self):
-        print("MAIN")
-        # setup named pipes
+        self.last_msg = None
 
-    def give(self, pid, label, *value):
-        print(os.getpid(),"given", label)
-
-        # send stuff through pipes
+    def give(self, pid, label, *values):
+        print(pid, label, values)
+        wp = open("p1", "w")
+        item = {label: values}
+        wp.write(json.dumps(item))
+        wp.close()
+        time.sleep(0.1)
 
     def receive(self, *messages):
+        wr = open("p1", "r")
+        raw = wr.read()
+        wr.close()
 
-        # receive stuff from pipes
+        if raw == "":
+            return
 
-        label = "stop"
+        if raw == self.last_msg:
+            return
+        self.last_msg = raw
 
-        for message in messages:
-            if message.label == label:
-                message.action()
+        data = json.loads(raw)
+        if list(data.keys()).count("data") > 0:
+            print(data["data"][0])
+        elif list(data.keys()).count("stop") > 0:
+            sys.exit()
