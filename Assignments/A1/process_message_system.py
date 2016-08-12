@@ -20,12 +20,11 @@ class MessageProc:
             return pid
 
     def main(self):
-        self.last_msg = None
+        self.last_msg = ""
 
-    def give(self, pid, label, *values):
-        print(pid, label, values)
+    def give(self, pid, label, value=""):
         wp = open("p1", "w")
-        item = {label: values}
+        item = {label: value}
         wp.write(json.dumps(item))
         wp.close()
         time.sleep(0.1)
@@ -43,7 +42,10 @@ class MessageProc:
         self.last_msg = raw
 
         data = json.loads(raw)
-        if list(data.keys()).count("data") > 0:
-            print(data["data"][0])
-        elif list(data.keys()).count("stop") > 0:
-            sys.exit()
+        for message in messages:
+            if list(data.keys()).count(message.label) > 0:
+                value = data[message.label]
+                if value == "":
+                    message.action()
+                else:
+                    message.action(value)
