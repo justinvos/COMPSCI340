@@ -3,7 +3,7 @@ import json
 import stat, os
 import time
 
-pid = 11518
+pid = 7508
 fifo_write = open("/tmp/" + str(pid), "w")
 
 def give(pid, label, *values):
@@ -14,7 +14,6 @@ try:
     if stat.S_ISFIFO(os.stat("/tmp/" + str(pid)).st_mode): # checks if pipe is open
         for i in range(20):
             give(pid, "data", str(i+1))
-            time.sleep(0.1)
         give(pid, "stop")
     else:
         print("Error: Not a pipe")

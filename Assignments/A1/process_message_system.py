@@ -1,82 +1,72 @@
 import atexit
 import json
 import os
-import stat
 import sys
 import time
-
+import stat
 class Message:
     def __init__(self, label, action=None, guard=None):
         self.label = label
         self.action = action
         self.guard = guard
 
-def getpath(pid):
+def get_path(pid):
     return "/tmp/" + str(pid)
 
 class MessageProc:
+    def __init__(self):
+        self.incoming_messages = []
+        self.writestreams = {}
+        self.readstream = None
 
-    def getpath(self):
-        return getpath(os.getpid())
+    def get_path(self):
+        return get_path(os.getpid())
 
-    def start(self, *args):
+    def main(self):
+        print(str(os.getpid()) + ":MAIN")
+
+    def start(self):
         pid = os.fork()
         if pid == 0:
+            print(str(os.getpid()) + " started")
             self.main()
         else:
             return pid
 
-    def delpipe(self):
-        if self.path == self.getpath():
-            #print(str(os.getpid()) + ": Deleting pipe " + self.path)
-            self.fifo_read.close()
-            os.unlink(self.path)
-            #print("Pipe " + self.path + " cleaned")
+    def receive(self, *message_types):
+        if self.readstream == None:
+            path = self.get_path()
+            print("Pipe:" + path)
+            os.mkfifo(path)
+            self.readstream = open(path, "r")
+            atexit.register(self.close)
+            print("Pipe created")
 
-    def main(self):
-        self.path = self.getpath()
-        atexit.register(self.delpipe)
+        line = self.readstream.readline()
+        contents = json.loads(line)
 
-        os.mkfifo(self.path)
-        self.fifo_read = open(self.path, "r")
+        for message_type in message_types:
+            if contents["label"] == message_type.label:
+                if len(contents["values"]) == 1:
+                    message_type.action(contents["values"][0])
+                else:
+                    message_type.action()
 
     def give(self, pid, label, *values):
-        dst_path = getpath(pid)
+        if str(pid) not in self.writestreams:
 
-        if fifo_write == None:
-            fifo_write = open(dst_path, "w")
-        elif fifo_write.name != "dst_path":
-            fifo_write.close()
-            fifo_write = open(dst_path, "w")
+            while True:
+                try:
+                    if stat.S_ISFIFO(os.stat(get_path(pid)).st_mode):
+                        break
+                except FileNotFoundError:
+                    pass
 
-        while True:
-            try:
-                if stat.S_ISFIFO(os.stat(dst_path).st_mode): # checks if pipe is open
-                    fifo_write.write(json.dumps({"label": label, "values": list(values)}) + "\n")
-                    time.sleep(0.0001)
-                    break
-                else:
-                    print("Error: Pipe closed")
-            except FileNotFoundError:
-                pass
+            self.writestreams[str(pid)] = open(get_path(pid), "w")
 
+        self.writestreams[str(pid)].write(json.dumps({"label": label, "sender": os.getpid(), "values": list(values)}) + "\n")
 
-
-    def receive(self, *messages):
-
-        line = self.fifo_read.readline()
-
-        try:
-            contents = json.loads(line)
-
-            for message in messages:
-                if message.label == contents["label"]:
-                    if len(contents["values"]) == 0:
-                        message.action()
-                    elif len(contents["values"]) == 1:
-                        message.action(contents["values"][0])
-                    else:
-                        message.action(contents["values"])
-
-        except json.decoder.JSONDecodeError:
-            print("="+ line + "=")
+    def close(self):
+        self.readstream.close()
+        os.unlink(self.get_path())
+        print("Pipe cleaned")
