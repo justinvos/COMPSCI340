@@ -8,7 +8,7 @@ import stat
 ANY = "any"
 
 class Message:
-    def __init__(self, label, action=None, guard=None):
+    def __init__(self, label, action=None, guard=lambda: True):
         self.label = label
         self.action = action
         self.guard = guard
@@ -21,6 +21,7 @@ class MessageProc:
         self.incoming_messages = []
         self.writestreams = {}
         self.readstream = None
+        self.backlog = []
 
     def get_path(self):
         return get_path(os.getpid())
@@ -48,12 +49,18 @@ class MessageProc:
         line = self.readstream.readline()
         contents = json.loads(line)
 
-        for message_type in message_types:
-            if contents["label"] == message_type.label or message_type.label == ANY:
-                if len(contents["values"]) == 1:
-                    return message_type.action(contents["values"][0])
-                else:
-                    return message_type.action()
+        self.backlog += [contents]
+
+        for backlog_msg in self.backlog:
+            for message_type in message_types:
+                if backlog_msg["label"] == message_type.label or message_type.label == ANY:
+                    if message_type.guard():
+                        if len(backlog_msg["values"]) == 1:
+                            ret_val = message_type.action(backlog_msg["values"][0])
+                        else:
+                            ret_val = message_type.action()
+                        self.backlog.remove(backlog_msg)
+                        return ret_val
 
 
 
