@@ -18,19 +18,22 @@ os.mkfifo(path)
 print("Pipe:" + path)
 
 
+fifo_read = open(path, "r")
+
 def receive():
-    fifo_read = open(path, "r")
     line = fifo_read.readline()
-    print(line)
+
+    if line == "":
+        print("EMPTY")
+        sys.exit()
 
     contents = json.loads(line)
 
     if contents["label"] == "data":
-        print(contents["values"][0])
+        print(str(contents["sender"]) + ":" + contents["values"][0])
     elif contents["label"] == "stop":
         print("Stopping")
         sys.exit()
-
 
 while True:
     receive()

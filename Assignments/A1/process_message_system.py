@@ -29,6 +29,7 @@ class MessageProc:
     def delpipe(self):
         if self.path == self.getpath():
             #print(str(os.getpid()) + ": Deleting pipe " + self.path)
+            self.fifo_read.close()
             os.unlink(self.path)
             #print("Pipe " + self.path + " cleaned")
 
@@ -37,14 +38,20 @@ class MessageProc:
         atexit.register(self.delpipe)
 
         os.mkfifo(self.path)
+        self.fifo_read = open(self.path, "r")
 
     def give(self, pid, label, *values):
         dst_path = getpath(pid)
 
+        if fifo_write == None:
+            fifo_write = open(dst_path, "w")
+        elif fifo_write.name != "dst_path":
+            fifo_write.close()
+            fifo_write = open(dst_path, "w")
+
         while True:
             try:
                 if stat.S_ISFIFO(os.stat(dst_path).st_mode): # checks if pipe is open
-                    fifo_write = open(dst_path, "w")
                     fifo_write.write(json.dumps({"label": label, "values": list(values)}) + "\n")
                     time.sleep(0.0001)
                     break
@@ -56,8 +63,8 @@ class MessageProc:
 
 
     def receive(self, *messages):
-        fifo_read = open(self.path, "r")
-        line = fifo_read.readline()
+
+        line = self.fifo_read.readline()
 
         try:
             contents = json.loads(line)
