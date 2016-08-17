@@ -4,6 +4,9 @@ import os
 import sys
 import time
 import stat
+
+ANY = "any"
+
 class Message:
     def __init__(self, label, action=None, guard=None):
         self.label = label
@@ -46,11 +49,14 @@ class MessageProc:
         contents = json.loads(line)
 
         for message_type in message_types:
-            if contents["label"] == message_type.label:
+            if contents["label"] == message_type.label or message_type.label == ANY:
                 if len(contents["values"]) == 1:
-                    message_type.action(contents["values"][0])
+                    return message_type.action(contents["values"][0])
                 else:
-                    message_type.action()
+                    return message_type.action()
+
+
+
 
     def give(self, pid, label, *values):
         if str(pid) not in self.writestreams:
