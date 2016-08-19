@@ -1,7 +1,5 @@
 import atexit, json, os, sys, time, threading
 
-ANY = "any"
-
 def get_path(pid):
     return "/tmp/" + str(pid)
 
@@ -38,9 +36,7 @@ class MessageProc:
             current_message = self.log[self.pointer]
 
             for message_type in message_types:
-                if message_type.label == ANY:
-                    message_type.action()
-                elif current_message["label"] == message_type.label:
+                if current_message["label"] == message_type.label:
                     if len(current_message["values"]) == 1:
                         message_type.action(current_message["values"][0])
                     else:
@@ -51,8 +47,10 @@ class MessageProc:
     def give(self, pid, label, *values):
         param_dict = {"label": label, "sender": os.getpid(), "values": values}
 
+        #print("GIVE " + param_dict["label"] + "=" + str(param_dict["values"]) + " TO " + str(pid))
+        time.sleep(1)
         f = open(get_path(pid), "w")
-        f.write(json.dumps(param_dict) + "\n")
+        f.write(json.dumps(param_dict))
         f.close()
 
     def close(self):
@@ -82,13 +80,10 @@ class ReadStreamer(threading.Thread):
         while True:
             line = self.readstream.readline()
             if line != "":
-                try:
-                    contents = json.loads(line)
-                except json.decoder.JSONDecodeError:
-                    print(line)
+                contents = json.loads(line)
+
                 with self.log_lock:
                     self.log += [contents]
-                    #print("LOG: " + str(len(self.log)))
 
         self.readstream.close()
 
@@ -112,3 +107,16 @@ class Consumer(MessageProc):
                 Message(
                     'stop',
                     action=lambda: (sys.exit())))
+
+"""
+me = MessageProc()
+me.main()
+con = Consumer().start()
+
+
+for i in range(10):
+    me.give(con, "data", i+1)
+me.give(con, "stop")
+print("done")
+sys.exit()
+"""
