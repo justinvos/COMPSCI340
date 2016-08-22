@@ -3,7 +3,7 @@ import json
 import stat, os
 import time
 
-pid = 11717
+pid = 9259
 fifo_write = open("/tmp/" + str(pid), "w")
 
 def give(pid, label, *values):
@@ -12,6 +12,7 @@ def give(pid, label, *values):
 
 for i in range(10):
     give(pid, "data", i + 1)
+give(pid, "any")
 give(pid, "stop")
 
 """

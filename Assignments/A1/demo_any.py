@@ -29,4 +29,6 @@ if __name__=='__main__':
     me = MessageProc()
     me.main()
     example = Any().start()
+    print("-START")
     me.give(example, 'hi')
+    print("-END")

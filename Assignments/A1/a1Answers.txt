@@ -1,0 +1,7 @@
+Name: Justin Vos
+UPI: jvos137
+ID: 6914129
+
+1. One of the features of named pipes is that write requests are atomic as long as it is 512 bytes or less. Some operating systems have higher write request limits, but the absolute minimum when interleaving is guarenteed to not happen is 512 bytes.
+2. A simple Python list is thread-safe because it is protected by the Global Interpreter Lock(GIL) which restricts concurrent access and serialises requests to the list.
+3. By using the process id as the pipe's name makes it very easy to interact maliciously with the process message system. By knowing the process ID, another program can send write requests to the pipe and the process message system would not even know it is from a different program because of its one-way nature. There are also many other opportunities for security attacks because of this implementation.

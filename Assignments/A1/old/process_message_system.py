@@ -33,12 +33,13 @@ class MessageProc:
         return get_path(os.getpid())
 
     def main(self):
-        print(str(os.getpid()) + ":MAIN")
+        pass
+        #print(str(os.getpid()) + ":MAIN")
 
     def start(self):
         pid = os.fork()
         if pid == 0:
-            print(str(os.getpid()) + " started")
+            #print(str(os.getpid()) + " started")
             self.main()
             sys.exit()
         else:
@@ -54,11 +55,11 @@ class MessageProc:
 
         if self.readstream == None:
             path = self.get_path()
-            print("Pipe:" + path)
+            #print("Pipe:" + path)
             os.mkfifo(path)
             self.readstream = open(path, "r")
             atexit.register(self.close)
-            print("Pipe created")
+            #print("Pipe created")
 
         with lock_cond:
             line = self.readstream.readline()
@@ -102,7 +103,7 @@ class MessageProc:
     def close(self):
         self.readstream.close()
         os.unlink(self.get_path())
-        print("Pipe cleaned")
+        #print("Pipe cleaned")
 
 class TimeOutCounter(threading.Thread):
     def __init__(self, timeout, cond):

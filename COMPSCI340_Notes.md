@@ -32,8 +32,61 @@ The **kernal** is the one program running at all times on the computer. It loads
 
 **Microkernals** includes the minimal amount of components in the operating system and all other components are user processes.
 
+## Virtual Machines
+
+A **Level 1** hypervisor runs at the operating system level.
+
+A **Level 2** hypervisor runs at the application level.
+
+**Binary translation** is the translation of code at run-time.
+
+**Containers** look like seperate virtual machines but all share the underlying operating system.
+
+**Paravirtualization** is the modification of the guest operating system to make it aware that it's being virtualised and make performance efficiencies.
+
+**Application virtualization** is an application that runs on a layer which provides the resources on a different operating system.
+
+**Programming-environment virtualization** is a virtual layer that makes source code works on various operating systems.
+
 ## Processes
 
 A **process** is a program in execution.
 
 A **process control block** (PCB) includes the process state, program counter, CPU registers, CPU-scheduling information and memory-management information, accounting information and I/O status information.
+
+The **process table** stores the collection of PCBs.
+
+A **resident table** hangs around in memory.
+
+**Thread structures** store all of the thread-related information similar in concept to the PCB.
+
+There are various process states:
+* Creating
+* Ready
+* Running
+* Waiting
+* Suspended
+
+There are three ways to create a process:
+* Create process system call
+* Copy a current process
+* Create a terminal session
+
+
+**Preemptive multitasking** is when something external stops the thread from its computation e.g. clock interrupt.
+
+**Cooperative multitasking** is when a process yields its right to run or when the system stops a process when it makes a system call.
+
+
+**First-come first-serve (FCFS)** scheduling queues jobs in the order they arrived.
+
+**Round-robin** scheduling allows every job a time slice in the order they arrived and places remaining jobs at the end of the queue.
+
+**Shortest-job first (SJF)** schedules the shortest CPU time job first.
+
+
+## Real-time scheduling
+
+**Periodic** are based on fixed time intervals.
+
+**Sporadic** are baded on a usually unexpected external signal or change.
