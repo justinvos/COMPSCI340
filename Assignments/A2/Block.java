@@ -1,5 +1,18 @@
+/**
+ * Block
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class Block {
   private String content;
+
+  public Block() {
+    this.content = "";
+  }
 
   public Block(String content) {
     this.content = content;

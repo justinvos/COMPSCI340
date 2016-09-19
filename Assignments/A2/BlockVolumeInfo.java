@@ -1,39 +1,54 @@
+/**
+ * BlockVolumeInfo
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class BlockVolumeInfo extends Block {
-  public static int NUM_DIRECTORY_ENTRIES = 6;
-  public static int START_DIRECTORY_ENTRY = 0;
-  public static int END_DIRECTORY_ENTRY = 5;
+  public static int ROOT_NUM_ENTRIES = 6;
 
   private boolean[] bitmap;
-  private DirectoryEntry[] directoryEntries;
+
+  private BlockDirectory directory;
 
   public BlockVolumeInfo() {
-    super("");
+    super();
 
     bitmap = new boolean[Drive.BLOCK_NUM];
     bitmap[Drive.START_BLOCK_ADDRESS] = true;
 
-    directoryEntries = new DirectoryEntry[BlockVolumeInfo.NUM_DIRECTORY_ENTRIES];
-    for(int i = BlockVolumeInfo.START_DIRECTORY_ENTRY; i <= BlockVolumeInfo.END_DIRECTORY_ENTRY; i++) {
-      directoryEntries[i] = new DirectoryEntry();
-    }
+    directory = new BlockDirectory(BlockVolumeInfo.ROOT_NUM_ENTRIES);
 
     setContent(this.toString());
   }
 
-  public BlockVolumeInfo(boolean[] bitmap, DirectoryEntry[] directoryEntries) {
+  public BlockVolumeInfo(boolean[] bitmap, BlockDirectory directory) {
     super("");
 
     this.bitmap = bitmap;
-    this.directoryEntries = directoryEntries;
+    this.directory = directory;
 
     setContent(this.toString());
   }
 
-  public void setDirectoryEntry(int i, DirectoryEntry directoryEntry) {
-    if(i >= BlockVolumeInfo.START_DIRECTORY_ENTRY && i <= BlockVolumeInfo.END_DIRECTORY_ENTRY) {
-      directoryEntries[i] = directoryEntry;
-      setContent(this.toString());
+  public static BlockVolumeInfo Parse(String line) {
+
+    boolean[] bitmap = new boolean[Drive.BLOCK_NUM];
+    String stringBitmap = line.substring(Drive.START_BLOCK_ADDRESS, Drive.END_BLOCK_ADDRESS + 1);
+    for(int i = 0; i < stringBitmap.length(); i++) {
+      bitmap[i] = stringBitmap.substring(i, i+1).equals("+");
     }
+
+    BlockDirectory directory = BlockDirectory.Parse(line.substring(Drive.END_BLOCK_ADDRESS + 1));
+
+    return new BlockVolumeInfo(bitmap, directory);
+  }
+
+  public BlockDirectory getDirectory() {
+    return directory;
   }
 
   @Override
@@ -48,9 +63,7 @@ public class BlockVolumeInfo extends Block {
       }
     }
 
-    for(int i = BlockVolumeInfo.START_DIRECTORY_ENTRY; i <= BlockVolumeInfo.END_DIRECTORY_ENTRY; i++) {
-      output = output + directoryEntries[i].toString();
-    }
+    output = output + directory.toString();
 
     return output;
   }

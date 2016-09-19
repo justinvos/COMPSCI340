@@ -1,9 +1,17 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Drive
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class Drive {
   public static int START_BLOCK_ADDRESS = 0;
   public static int END_BLOCK_ADDRESS = 127;
