@@ -5,6 +5,12 @@ public class DirectoryEntry {
   private String fileName;
   private int[] addresses;
 
+  public DirectoryEntry() {
+    this.isDirectory = false;
+    setFileName("");
+    setAddresses(new int[DirectoryEntry.NUM_BLOCK_ADDRESSES]);
+  }
+
   public DirectoryEntry(boolean isDirectory, String fileName) {
     this.isDirectory = isDirectory;
     setFileName(fileName);

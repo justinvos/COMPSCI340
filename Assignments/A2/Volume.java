@@ -8,6 +8,7 @@ public class Volume extends Drive {
   public void format() {
     super.format();
 
+    writeBlock(0, new BlockVolumeInfo());
     System.out.println("Vol format");
   }
 }
