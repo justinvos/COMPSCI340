@@ -16,11 +16,12 @@ public class TinyDOS {
   public static BlockDirectory currentDirectory;
 
   public static void main(String[] args) {
-    System.out.println("TinyDOS");
+
 
     Scanner in = new Scanner(System.in);
 
     while(active) {
+      System.out.print("TinyDOS: ");
       if(currentVolume != null) {
         System.out.print(currentVolume.getLabel());
       }
@@ -60,10 +61,10 @@ public class TinyDOS {
         System.out.println("type size name");
         System.out.println("------------------");
 
-        for(int i = 0; i < currentDirectory.length(); i++) {
-          DirectoryEntry entry = currentDirectory.getEntry(i);
+        for(int i = 0; i < currentVolume.getLogicalRoot().length(); i++) {
+          DirectoryEntry entry = currentVolume.getLogicalRoot().getEntry(i);
 
-          if(!entry.getFileName().equals("")) {
+          if(!entry.getFileName().trim().equals("")) {
             if(entry.isDirectory()) {
               System.out.print("dir  ");
             } else {
@@ -73,8 +74,29 @@ public class TinyDOS {
           }
         }
         break;
-      case "size":
-        System.out.println(currentVolume.getRoot().size());
+      case "print":
+        if(input.length == 2) {
+          String path = input[1];
+          LogicalFile file = LogicalFile.Extract(currentVolume, path);
+          System.out.println(file.getContent());
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+        break;
+      case "append":
+        if(input.length == 3) {
+          if(input[2].startsWith("\"") && input[2].endsWith("\"")) {
+            String path = input[1];
+            String data = input[2].substring(1, input[2].length() - 1);
+
+            System.out.println("PATH: " + path + " + " + data);
+
+          } else {
+            System.out.println("Data argument should be enclosed in speech marks e.g. \"data\"");
+          }
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
         break;
       case "quit":
         TinyDOS.active = false;

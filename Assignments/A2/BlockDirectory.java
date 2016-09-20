@@ -52,6 +52,26 @@ public class BlockDirectory extends Block {
     return entries[i];
   }
 
+  /*
+  public DirectoryEntry getEntry(String fileName) {
+    for(int i = 0; i < entries.length; i++) {
+      if(entries[i].getFileName().equals(fileName)) {
+        return entries[i];
+      }
+    }
+    return null;
+  }
+
+  public boolean contains(String fileName) {
+    for(int i = 0; i < entries.length; i++) {
+      if(entries[i].getFileName().equals(fileName)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  */
+
   public int length() {
     return entries.length;
   }

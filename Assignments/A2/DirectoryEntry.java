@@ -62,6 +62,10 @@ public class DirectoryEntry {
     this.size = size;
   }
 
+  public int length() {
+    return addresses.length;
+  }
+
   public int getAddress(int i) {
     return addresses[i];
   }

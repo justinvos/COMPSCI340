@@ -18,6 +18,10 @@ public class Block {
     this.content = content;
   }
 
+  public static Block Parse(String line) {
+    return new Block(line);
+  }
+
   public String getContent() {
     return this.content;
   }
