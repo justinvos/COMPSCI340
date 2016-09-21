@@ -22,13 +22,13 @@ public class Drive {
   private String label;
   private File file;
 
-  private String[] memory;
+  private Block[] blocks;
 
   public Drive(String label) {
     this.label = label;
 
-    file = new File("/home/vos/Documents/university/COMPSCI340/Assignments/A2/new/" + label + ".drive");
-    memory = new String[Drive.BLOCK_NUM];
+    file = new File("/home/vos/Documents/university/COMPSCI340/Assignments/A2/" + label + ".drive");
+    blocks = new Block[Drive.BLOCK_NUM];
 
 
     if(file.length() == 0) { // is empty
@@ -47,7 +47,7 @@ public class Drive {
 
   public void format() {
     for(int address = START_BLOCK_ADDRESS; address <= Drive.END_BLOCK_ADDRESS; address++) {
-      memory[address] = Block.EMPTY;
+      blocks[address] = new Block(address);
     }
     flush();
   }
@@ -57,7 +57,7 @@ public class Drive {
       try {
         Scanner in = new Scanner(file);
         for(int address = Drive.START_BLOCK_ADDRESS; address <= Drive.END_BLOCK_ADDRESS; address++) {
-          memory[address] = in.nextLine();
+          blocks[address] = new Block(address, in.nextLine());
           in.nextLine();
         }
       } catch(FileNotFoundException e) {
@@ -70,7 +70,7 @@ public class Drive {
     try {
       PrintWriter out = new PrintWriter(file);
       for(int i = Drive.START_BLOCK_ADDRESS; i <= Drive.END_BLOCK_ADDRESS; i++) {
-        out.println(memory[i]);
+        out.println(blocks[i].toString());
         out.println("** " + i + " **");
       }
       out.close();
@@ -79,17 +79,25 @@ public class Drive {
     }
   }
 
-  public void write(Block block) {
-    System.out.println("WRITING:" + block.toString() + "@" + block.getAddress());
-    memory[block.getAddress()] = block.toString();
-    flush();
-  }
-
-  public String read(int address) {
-    return memory[address];
-  }
 
   public String getLabel() {
     return label;
+  }
+
+  public void writeBlock(int address, Block block) {
+    if(isReady()) {
+      if(blockExists(address)) {
+        blocks[address] = block;
+        flush();
+      }
+    }
+  }
+
+  public Block readBlock(int address) {
+    if(isReady()) {
+      return blocks[address];
+    } else {
+      return null;
+    }
   }
 }

@@ -11,28 +11,29 @@ public class DirectoryEntry {
   public static int NUM_BLOCK_ADDRESSES = 12;
   public static int LENGTH = 64;
 
+  private Directory parent;
   private boolean isDirectory;
   private String fileName;
   private int size;
   private int[] addresses;
 
-  public DirectoryEntry() {
-    this(false, "", 0, new int[DirectoryEntry.NUM_BLOCK_ADDRESSES]);
+  public DirectoryEntry(Directory parent) {
+    this(parent, false, "", 0, new int[DirectoryEntry.NUM_BLOCK_ADDRESSES]);
   }
 
-  public DirectoryEntry(boolean isDirectory, String fileName) {
-    this(isDirectory, fileName, 0, new int[DirectoryEntry.NUM_BLOCK_ADDRESSES]);
+  public DirectoryEntry(Directory parent, boolean isDirectory, String fileName) {
+    this(parent, isDirectory, fileName, 0, new int[DirectoryEntry.NUM_BLOCK_ADDRESSES]);
   }
 
-  public DirectoryEntry(boolean isDirectory, String fileName, int size, int[] addresses) {
+  public DirectoryEntry(Directory parent, boolean isDirectory, String fileName, int size, int[] addresses) {
+    this.parent = parent;
     this.isDirectory = isDirectory;
     setFileName(fileName);
     setSize(size);
     setAddresses(addresses);
   }
 
-  public static DirectoryEntry Parse(String line) {
-
+  public static DirectoryEntry Parse(Directory parent, String line) {
     boolean isDirectory = line.substring(0, 2) == "d:";
     String fileName = line.substring(2, 10).trim();
     int size = Integer.parseInt(line.substring(11, 15));
@@ -43,7 +44,11 @@ public class DirectoryEntry {
       addresses[i] = Integer.parseInt(stringAddresses[i]);
     }
 
-    return new DirectoryEntry(isDirectory, fileName, size, addresses);
+    return new DirectoryEntry(parent, isDirectory, fileName, size, addresses);
+  }
+
+  public Directory getParent() {
+    return parent;
   }
 
   public boolean isDirectory() {
@@ -70,9 +75,21 @@ public class DirectoryEntry {
     return addresses[i];
   }
 
+  public void setAddress(int index, int address) {
+    addresses[index] = address;
+  }
+
   public void setAddresses(int[] addresses) {
     if(addresses.length == 12) {
       this.addresses = addresses;
+    }
+  }
+
+  public void removeAddress(int address) {
+    for(int index = 0; index < length(); index++) {
+      if(getAddress(index) == address) {
+        setAddress(index, address);
+      }
     }
   }
 

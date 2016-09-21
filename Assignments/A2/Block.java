@@ -1,32 +1,30 @@
-/**
- * Block
- *
- * Name: Justin Vos
- * ID: 6914129
- * UPI: jvos137
- *
- * @author      Justin Vos
- */
 public class Block {
-  private String content;
+  public static String EMPTY = "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ";
 
-  public Block() {
-    this.content = "";
+  private int address;
+
+  public Block(int address) {
+    this.address = address;
   }
 
-  public Block(String content) {
-    this.content = content;
+  public int getAddress() {
+    return address;
   }
 
-  public static Block Parse(String line) {
-    return new Block(line);
+  public String read() {
+    return TinyDOS.volume.read(getAddress());
   }
 
-  public String getContent() {
-    return this.content;
+  public void write() {
+    TinyDOS.volume.write(this);
   }
 
-  public void setContent(String content) {
-    this.content = content;
+  public boolean isEmpty() {
+    return true;
+  }
+
+  @Override
+  public String toString() {
+    return Block.EMPTY;
   }
 }

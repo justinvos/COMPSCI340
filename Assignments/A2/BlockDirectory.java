@@ -1,97 +1,88 @@
-/**
- * BlockDirectory
- *
- * Name: Justin Vos
- * ID: 6914129
- * UPI: jvos137
- *
- * @author      Justin Vos
- */
 public class BlockDirectory extends Block {
-  public static int DEFAULT_NUM_ENTRIES = 8;
 
-  private DirectoryEntry[] entries;
+  public static int DEFAULT_ENTRY_NUM = 8;
 
-  public BlockDirectory() {
-    this(BlockDirectory.DEFAULT_NUM_ENTRIES);
+  private Entry[] entries;
+
+  public BlockDirectory(int address, int entryNum) {
+    super(address);
+    this.entries = new Entry[entryNum];
+
+    for(int index = 0; index < length(); index++) {
+      entries[index] = new EntryFile(this, index);
+    }
   }
 
-  public BlockDirectory(int numEntries) {
-    super();
+  public BlockDirectory(int address) {
+    this(address, BlockDirectory.DEFAULT_ENTRY_NUM);
+  }
 
-    entries = new DirectoryEntry[numEntries];
+  public static BlockDirectory Parse(int address) {
+    BlockDirectory directory = new BlockDirectory(address);
 
-    for(int i = 0; i < entries.length; i++) {
-      entries[i] = new DirectoryEntry();
+    if(address == 0) {
+      directory = new BlockDirectory(address, BlockVolumeInfo.VOLUME_INFO_ENTRY_NUM);
+    }
+    String line = directory.read();
+
+    for(int index = 0; index < directory.length(); index++) {
+      directory.set(index, Entry.Parse(directory, index, line.substring(index * Entry.LENGTH, (index + 1) * Entry.LENGTH)));
     }
 
-    setContent(this.toString());
+    return directory;
   }
-
-  public BlockDirectory(DirectoryEntry[] entries) {
-    super();
-
-    this.entries = entries;
-
-    setContent(this.toString());
-  }
-
-  public static BlockDirectory Parse(String line) {
-    int numEntries = (int)(line.length() / DirectoryEntry.LENGTH);
-
-    DirectoryEntry[] entries = new DirectoryEntry[numEntries];
-
-    for(int i = 0; i < numEntries; i++) {
-      entries[i] = DirectoryEntry.Parse(line.substring(i * DirectoryEntry.LENGTH, (i + 1) * DirectoryEntry.LENGTH));
-    }
-
-    return new BlockDirectory(entries);
-  }
-
-  public DirectoryEntry getEntry(int i) {
-    return entries[i];
-  }
-
-  /*
-  public DirectoryEntry getEntry(String fileName) {
-    for(int i = 0; i < entries.length; i++) {
-      if(entries[i].getFileName().equals(fileName)) {
-        return entries[i];
-      }
-    }
-    return null;
-  }
-
-  public boolean contains(String fileName) {
-    for(int i = 0; i < entries.length; i++) {
-      if(entries[i].getFileName().equals(fileName)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  */
 
   public int length() {
     return entries.length;
   }
 
-  public int size() {
-    int size = 0;
+  public Entry get(int index) {
+    return entries[index];
+  }
 
-    for(int i = 0; i < entries.length; i++) {
-      size = size + entries[i].size();
+  public void set(int index, Entry entry) {
+    entries[index] = entry;
+  }
+
+  public int find(String name) {
+    for(int index = 0; index < entries.length; index++) {
+      if(entries[index].getName().equals(name)) {
+        return index;
+      }
     }
+    return -1;
+  }
 
-    return size;
+  public Entry get(String name) {
+    int index = find(name);
+    if(index != -1) {
+      return get(index);
+    } else {
+      return null;
+    }
+  }
+
+  public Entry getFreeEntry() {
+    int index = find("");
+    if(index != -1) {
+      Entry entry = get(index);
+      return entry;
+    } else {
+      return null;
+    }
+  }
+
+  @Override
+  public boolean isEmpty() {
+    return false;
   }
 
   @Override
   public String toString() {
     String output = "";
 
-    for(int i = 0; i < entries.length; i++) {
-      output = output + entries[i].toString();
+    for(int index = 0; index < entries.length; index++) {
+      output += entries[index].toString();
     }
 
     return output;

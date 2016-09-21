@@ -10,7 +10,8 @@ import java.util.ArrayList;
  */
 public class Volume extends Drive {
 
-  private BlockVolumeInfo volumeInfo;
+  private EntryDirectory root;
+  private BlockVolumeInfo info;
 
   public Volume(String label) {
     super(label);
@@ -20,8 +21,10 @@ public class Volume extends Drive {
   public void format() {
     super.format();
 
-    volumeInfo = new BlockVolumeInfo();
-    writeBlock(0, volumeInfo);
+    info = new BlockVolumeInfo();
+    info.write();
+
+    root = new EntryDirectory(info);
     System.out.println("Vol format");
   }
 
@@ -29,63 +32,45 @@ public class Volume extends Drive {
   public void load() {
     super.load();
 
-    volumeInfo = BlockVolumeInfo.Parse(readBlock(0).getContent());
-    System.out.println("Vol load");
-
-    System.out.println(getLogicalRoot().length());
+    info = BlockVolumeInfo.Parse();
+    root = new EntryDirectory(info);
   }
 
-  public LogicalDirectory getLogicalRoot() {
-    ArrayList<DirectoryEntry> entries = new ArrayList<DirectoryEntry>();
-
-    for(int i = 0; i < volumeInfo.getDirectory().length(); i++) {
-      DirectoryEntry entry = volumeInfo.getDirectory().getEntry(i);
-
-      if(!entry.getFileName().trim().equals("")) {
-        entries.add(entry);
-      }
-    }
-
-    return new LogicalDirectory(entries);
+  @Override
+  public void write(Block block) {
+    System.out.println(block.isEmpty());
+    getInfo().setBitmap(block.getAddress(), !block.isEmpty());
+    super.write(block);
   }
 
-  public BlockDirectory getRoot() {
-    return volumeInfo.getDirectory();
+  public EntryDirectory getRoot() {
+    return root;
   }
 
-  public DirectoryEntry getDirectoryEntry(String path) {
+  public BlockVolumeInfo getInfo() {
+    return info;
+  }
+
+  public Entry getEntry(String path) {
     if(path.startsWith("/")) {
       path = path.substring(1);
     }
-    String[] pathParts = path.split("/");
-    LogicalDirectory dir = getLogicalRoot();
-    for(int i = 0; i < pathParts.length - 1; i++) {
-      if(dir.contains(pathParts[i])) {
-        dir = LogicalDirectory.Extract(this, dir.getEntry(pathParts[i]));
+    if(path.endsWith("/")) {
+      path = path.substring(0, path.length() - 1);
+    }
+    String[] components = path.split("/");
+    EntryDirectory directory = getRoot();
+    for(int level = 0; level < components.length; level++) {
+      Entry child = directory.getChild(components[level]);
+      if(child == null) {
+        return null;
+      }
+      if(level == components.length - 1) {
+        return child;
+      } else {
+        directory = (EntryDirectory)child;
       }
     }
-    DirectoryEntry dirEntry = dir.getEntry(pathParts[pathParts.length - 1]);
-    return dirEntry;
+    return null;
   }
-
-  /*
-  public DirectoryEntry getDirectoryEntry(String path) {
-    if(!path.startsWith("/")) {
-      return null;
-    }
-
-    String[] pathParts = path.split("/");
-
-    BlockDirectory currentDirectory = getRoot();
-
-    for(int i = 1; i < pathParts.length; i++) {
-      if(currentDirectory.contains(pathParts[i])) {
-        if(i == pathParts.length - 1) {
-          return currentDirectory.getEntry(pathParts[i]);
-        } else {
-          currentDirectory = new BlockDirectory(currentDirectory.getEntry(pathParts[i]).);
-        }
-      }
-    }
-  }*/
 }

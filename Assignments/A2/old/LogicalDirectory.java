@@ -22,8 +22,8 @@ public class LogicalDirectory {
     for(int blockIndex = 0; blockIndex < dirEntry.length(); blockIndex++) {
       BlockDirectory blockDirectory = BlockDirectory.Parse(volume.readBlock(dirEntry.getAddress(blockIndex)).getContent());
 
-      for(int entryIndex = 0; entryIndex < blockDirectory.length(); entryIndex++) {
-        entries.add(blockDirectory.getEntry(entryIndex));
+      for(int entryIndex = 0; entryIndex < blockDirectory.getDirectory().length(); entryIndex++) {
+        entries.add(blockDirectory.getDirectory().getEntry(entryIndex));
       }
     }
 
