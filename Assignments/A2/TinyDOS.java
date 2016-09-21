@@ -9,6 +9,13 @@ public class TinyDOS {
 
     System.out.println(volume.getRoot().get(0));
 
+    LogicalDirectory dir = new LogicalDirectory(volume.getRoot());
+    System.out.println(dir.children.size());
+
+    dir.children.get(0).setName("b");
+    dir.children.get(0).write();
+
+    System.out.println(volume.getRoot().get(0));
     //volume.getRoot().mkfile("a");
   }
 

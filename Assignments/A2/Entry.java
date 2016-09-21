@@ -52,6 +52,10 @@ public abstract class Entry {
     this.name = name;
   }
 
+  public void write() {
+    getParent().write();
+  }
+
   public int getSize() {
     return size;
   }

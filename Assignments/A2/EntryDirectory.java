@@ -15,13 +15,16 @@ public class EntryDirectory extends Entry {
 
   public static EntryDirectory Parse(BlockDirectory parent, int index, String line) {
     EntryDirectory entry = new EntryDirectory(parent, index);
-
+    
     entry.setName(line.substring(2, 10).trim());
     entry.setSize(Integer.parseInt(line.substring(11, 15)));
     String[] stringAddresses = line.substring(16, 63).split(" ");
     int[] addresses = new int[Entry.NUM_ADDRESS];
     for(int slot = 0; slot < stringAddresses.length; slot++) {
-      entry.set(slot, new BlockDirectory(Integer.parseInt(stringAddresses[slot])));
+      int address = Integer.parseInt(stringAddresses[slot]);
+      if(address != 0) {
+        entry.set(slot, new BlockDirectory(address));
+      }
     }
 
     return entry;
