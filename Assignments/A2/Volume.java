@@ -59,7 +59,7 @@ public class Volume extends Drive {
       path = path.substring(0, path.length() - 1);
     }
     String[] components = path.split("/");
-    EntryDirectory directory = getRoot();
+    LogicalDirectory directory = new LogicalDirectory(getRoot());
     for(int level = 0; level < components.length; level++) {
       Entry child = directory.getChild(components[level]);
       if(child == null) {
@@ -67,8 +67,8 @@ public class Volume extends Drive {
       }
       if(level == components.length - 1) {
         return child;
-      } else {
-        directory = (EntryDirectory)child;
+      } else if(child instanceof EntryDirectory) {
+        directory = new LogicalDirectory((EntryDirectory)child);
       }
     }
     return null;

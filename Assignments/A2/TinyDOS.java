@@ -12,11 +12,12 @@ public class TinyDOS {
     LogicalDirectory dir = new LogicalDirectory(volume.getRoot());
 
 
-
-    System.out.println(dir.makeFile("test"));
     //System.out.println(dir.hasChild("test"));
 
-    System.out.println(dir);
+    LogicalFile file = new LogicalFile((EntryFile)volume.getEntry("test"));
+    //file.setContent("hey");
+
+    System.out.println(file);
 
     /*Entry entry = dir.getChild("b");
 

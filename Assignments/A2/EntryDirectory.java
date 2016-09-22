@@ -15,7 +15,7 @@ public class EntryDirectory extends Entry {
 
   public static EntryDirectory Parse(BlockDirectory parent, int index, String line) {
     EntryDirectory entry = new EntryDirectory(parent, index);
-    
+
     entry.setName(line.substring(2, 10).trim());
     entry.setSize(Integer.parseInt(line.substring(11, 15)));
     String[] stringAddresses = line.substring(16, 63).split(" ");
@@ -42,22 +42,6 @@ public class EntryDirectory extends Entry {
     return blocks.length;
   }
 
-  public Entry getChild(String name) {
-    for(int slot = 0; slot < length(); slot++) {
-      Block block = get(slot);
-      if(block instanceof BlockDirectory) {
-        BlockDirectory directory = (BlockDirectory)block;
-        Entry child = directory.get(name);
-        if(child != null) {
-          return child;
-        }
-      } else {
-        System.out.println("SHOULD NOT HAPPEN");
-      }
-    }
-    return null;
-  }
-
   public Entry getFreeEntry() {
     for(int slot = 0; slot < length(); slot++) {
       Entry entry = ((BlockDirectory)get(slot)).getFreeEntry();
@@ -66,16 +50,6 @@ public class EntryDirectory extends Entry {
       }
     }
     return null;
-  }
-
-  public Entry mkfile(String name) {
-    Entry entry = getFreeEntry();
-    entry.setName(name);
-    entry.setFile();
-
-    entry.getParent().write();
-
-    return entry;
   }
 
 
