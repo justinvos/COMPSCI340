@@ -51,12 +51,12 @@ public class Volume extends Drive {
   }
 
   public Entry getEntry(String path) {
-    if(path.startsWith("/")) {
-      path = path.substring(1);
+    path = TinyDOS.TrimSlash(path);
+
+    if(path.length() == 0) {
+      return getRoot();
     }
-    if(path.endsWith("/")) {
-      path = path.substring(0, path.length() - 1);
-    }
+
     String[] components = path.split("/");
     LogicalDirectory directory = new LogicalDirectory(getRoot());
     for(int level = 0; level < components.length; level++) {

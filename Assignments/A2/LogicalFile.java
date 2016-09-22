@@ -42,6 +42,10 @@ public class LogicalFile {
     }
   }
 
+  public void appendContent(String content) {
+    setContent(getContent() + content);
+  }
+
   @Override
   public String toString() {
     return content;
