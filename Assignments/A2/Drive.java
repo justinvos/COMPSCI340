@@ -92,4 +92,15 @@ public class Drive {
   public String getLabel() {
     return label;
   }
+
+
+
+  public int getEmptyBlock() {
+    for(int address = Drive.START_BLOCK_ADDRESS; address <= Drive.END_BLOCK_ADDRESS; address++) {
+      if(memory[address].equals(Block.EMPTY)) {
+        return address;
+      }
+    }
+    return -1;
+  }
 }

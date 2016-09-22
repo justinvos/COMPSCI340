@@ -1,4 +1,5 @@
 public class Block {
+  public static int MAX_LENGTH = 512;
   public static String EMPTY = "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ";
 
   private int address;

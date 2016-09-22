@@ -13,16 +13,19 @@ public class EntryFile extends Entry {
     entry.setName(line.substring(2, 10).trim());
     entry.setSize(Integer.parseInt(line.substring(11, 15)));
     String[] stringAddresses = line.substring(16, 63).split(" ");
-    int[] addresses = new int[Entry.NUM_ADDRESS];
+
     for(int slot = 0; slot < stringAddresses.length; slot++) {
-      entry.set(slot, new BlockData(Integer.parseInt(stringAddresses[slot])));
+      int address = Integer.parseInt(stringAddresses[slot]);
+      if(address != 0) {
+        entry.set(slot, new BlockData(address));
+      }
     }
 
     return entry;
   }
 
 
-  public Block get(int slot) {
+  public BlockData get(int slot) {
     return blocks[slot];
   }
 
@@ -41,7 +44,7 @@ public class EntryFile extends Entry {
     output += TinyDOS.AddPostPadding(getName(), 8, " ") + " ";
     output += TinyDOS.AddPrePadding(String.valueOf(getSize()), 4, "0") + ":";
 
-    for(int slot = 0; slot < blocks.length; slot++) {
+    for(int slot = 0; slot < length(); slot++) {
       int address = 0;
       if(blocks[slot] != null) {
         address = blocks[slot].getAddress();

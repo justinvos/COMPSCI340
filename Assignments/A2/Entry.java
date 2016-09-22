@@ -36,6 +36,10 @@ public abstract class Entry {
     return isDirectory;
   }
 
+  public boolean isFile() {
+    return !isDirectory;
+  }
+
   public void setDirectory() {
     isDirectory = true;
   }
