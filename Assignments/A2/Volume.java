@@ -39,6 +39,10 @@ public class Volume extends Drive {
   @Override
   public void write(Block block) {
     getInfo().setBitmap(block.getAddress(), !block.isEmpty());
+    if(block.getAddress() != 0) {
+      getInfo().write();
+    }
+
     super.write(block);
   }
 

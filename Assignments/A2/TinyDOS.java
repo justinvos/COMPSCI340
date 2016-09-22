@@ -8,6 +8,13 @@ public class TinyDOS {
     reconnect("test");
     ls("/d/");
     print("/d/info");
+    //mkfile("/d/info");
+    //append("/d/info", "DONE");
+    //delfile("/d/info");
+    deldir("/d/");
+
+    //LogicalFile logicalFile = new LogicalFile((EntryFile)volume.getEntry("/d/info"));
+    //logicalFile.setContent("Hi again.");
   }
 
   public static void format(String label) {
@@ -107,11 +114,27 @@ public class TinyDOS {
   }
 
   public static void delfile(String filePath) {
+    EntryFile entryFile = (EntryFile)volume.getEntry(filePath);
 
+    if(entryFile != null) {
+      LogicalFile logicalFile = new LogicalFile(entryFile);
+      logicalFile.delete();
+      System.out.println("Deleted successfully");
+    } else {
+      System.out.println(filePath + " could not be found");
+    }
   }
 
   public static void deldir(String directoryPath) {
+    EntryDirectory entryDirectory = (EntryDirectory)volume.getEntry(directoryPath);
 
+    if(entryDirectory != null) {
+      LogicalDirectory logicalDirectory = new LogicalDirectory(entryDirectory);
+      logicalDirectory.delete();
+      System.out.println("Deleted successfully");
+    } else {
+      System.out.println(directoryPath + " could not be found");
+    }
   }
 
   public static void quit() {

@@ -28,22 +28,40 @@ public class LogicalFile {
 
     int numberOfChunks = (int)Math.ceil(length() / (double)Block.MAX_LENGTH);
     String[] chunks = new String[numberOfChunks];
-    for(int chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
-      chunks[chunkIndex] = getContent().substring(chunkIndex * Block.MAX_LENGTH, Math.min(length(), (chunkIndex + 1) * Block.MAX_LENGTH));
+    for(int slot = 0; slot < entry.length(); slot++) {
+      BlockData block = entry.get(slot);
 
-      BlockData block = entry.get(chunkIndex);
-      if(block != null && !block.isEmpty()) {
-        block.setData(chunks[chunkIndex]);
+      if(slot < chunks.length) {
+        int chunkIndex = slot;
+        chunks[chunkIndex] = getContent().substring(chunkIndex * Block.MAX_LENGTH, Math.min(length(), (chunkIndex + 1) * Block.MAX_LENGTH));
+
+
+        if(block != null && !block.isEmpty()) {
+          block.setData(chunks[chunkIndex]);
+        } else {
+          block = new BlockData(TinyDOS.volume.getEmptyBlock(), chunks[chunkIndex]);
+          entry.set(chunkIndex, block);
+          entry.getParent().write();
+        }
       } else {
-        block = new BlockData(TinyDOS.volume.getEmptyBlock(), chunks[chunkIndex]);
-        entry.set(chunkIndex, block);
-        entry.getParent().write();
+        if(block != null) {
+          block.setData(Block.EMPTY);
+          entry.set(slot, null);
+          entry.getParent().write();
+        }
       }
     }
   }
 
   public void appendContent(String content) {
     setContent(getContent() + content);
+  }
+
+  public void delete() {
+    setContent("");
+    entry.getParent().remove(entry.getIndex());
+    //entry.getParent().set(entry.getIndex(), new EntryFile(entry.getParent(), entry.getIndex()));
+    entry.getParent().write();
   }
 
   @Override

@@ -45,6 +45,10 @@ public class BlockDirectory extends Block {
     entries[index] = entry;
   }
 
+  public void remove(int index) {
+    entries[index] = new EntryFile(this, index);
+  }
+
   public int find(String name) {
     for(int index = 0; index < entries.length; index++) {
       if(entries[index].getName().equals(name)) {

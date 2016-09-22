@@ -110,6 +110,16 @@ public class LogicalDirectory {
     return null;
   }
 
+  public void delete() {
+    if(length() == 0) {
+      for(int slot = 0; slot < entry.length(); slot++) {
+        entry.remove(slot);
+      }
+      entry.getParent().remove(entry.getIndex());
+      entry.getParent().write();
+    }
+  }
+
   @Override
   public String toString() {
     String output = "TYPE NAME     SIZE\n------------------";

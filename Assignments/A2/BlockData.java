@@ -18,7 +18,7 @@ public class BlockData extends Block {
 
   @Override
   public boolean isEmpty() {
-    return false;
+    return data.equals(Block.EMPTY);
   }
 
   @Override

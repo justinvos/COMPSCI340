@@ -38,6 +38,14 @@ public class EntryDirectory extends Entry {
     blocks[slot] = block;
   }
 
+  public void remove(int slot) {
+    BlockDirectory block = get(slot);
+    if(block != null) {
+      set(slot, null);
+      new Block(block.getAddress()).write();
+    }
+  }
+
   public int length() {
     return blocks.length;
   }
