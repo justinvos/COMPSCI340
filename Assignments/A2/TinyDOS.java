@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.NoSuchElementException;
 /**
  * TinyDOS
  *
@@ -22,7 +23,16 @@ public class TinyDOS {
       }
 
       System.out.print("$ ");
-      handleInput(in.nextLine());
+      try {
+        String input = in.nextLine();
+        if(input.length() > 0) {
+          handleInput(input);
+        }
+      } catch(NoSuchElementException e) {
+        System.out.println();
+        quit();
+      }
+
       System.out.println();
     }
   }
