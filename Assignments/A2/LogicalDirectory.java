@@ -49,12 +49,32 @@ public class LogicalDirectory {
     return findChild(name) != -1;
   }
 
-  public void makeFile(String name) {
+  public EntryFile makeFile(String name) {
+    if(hasChild(name)) {
+      return null;
+    }
 
+    for(int slot = 0; slot < entry.length(); slot++) {
+      BlockDirectory block = entry.get(slot);
+      int index = block.findEmpty();
+      if(index != -1) {
+        System.out.println("Free");
+
+        EntryFile file = new EntryFile(block, index);
+        file.setName(name);
+        file.getParent().set(file.getIndex(), file);
+
+        children.add(file);
+
+        file.getParent().write();
+        return file;
+      }
+    }
+    return null;
   }
 
   public void makeDirectory(String name) {
-    
+
   }
 
   @Override

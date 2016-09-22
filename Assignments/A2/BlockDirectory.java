@@ -53,6 +53,10 @@ public class BlockDirectory extends Block {
     return -1;
   }
 
+  public int findEmpty() {
+    return find("");
+  }
+
   public Entry get(String name) {
     int index = find(name);
     if(index != -1) {
