@@ -1,3 +1,12 @@
+/**
+ * BlockData
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class BlockData extends Block {
   private String data;
 

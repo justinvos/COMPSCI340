@@ -1,3 +1,12 @@
+/**
+ * BlockkDirectory
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class BlockDirectory extends Block {
 
   public static int DEFAULT_ENTRY_NUM = 8;

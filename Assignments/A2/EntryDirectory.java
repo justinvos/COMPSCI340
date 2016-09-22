@@ -1,3 +1,12 @@
+/**
+ * EntryDirectory
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class EntryDirectory extends Entry {
   public BlockDirectory[] blocks;
 

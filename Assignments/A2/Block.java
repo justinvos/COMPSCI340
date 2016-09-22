@@ -1,3 +1,12 @@
+/**
+ * Block
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class Block {
   public static int MAX_LENGTH = 512;
   public static String EMPTY = "                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ";

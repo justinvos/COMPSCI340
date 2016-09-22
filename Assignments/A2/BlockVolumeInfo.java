@@ -1,3 +1,12 @@
+/**
+ * BlockVolumeInfo
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class BlockVolumeInfo extends BlockDirectory {
   public static int VOLUME_INFO_ADDRESS = 0;
   public static int VOLUME_INFO_ENTRY_NUM = 6;

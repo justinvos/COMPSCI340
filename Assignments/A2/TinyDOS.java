@@ -1,5 +1,13 @@
 import java.util.Scanner;
-
+/**
+ * TinyDOS
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class TinyDOS {
   public static boolean active = true;
   public static Volume volume;

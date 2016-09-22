@@ -1,3 +1,12 @@
+/**
+ * LogicalFile
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class LogicalFile {
   private EntryFile entry;
   private String content;
@@ -66,7 +75,6 @@ public class LogicalFile {
   public void delete() {
     setContent("");
     entry.getParent().remove(entry.getIndex());
-    //entry.getParent().set(entry.getIndex(), new EntryFile(entry.getParent(), entry.getIndex()));
     entry.getParent().write();
   }
 

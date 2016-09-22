@@ -1,5 +1,14 @@
 import java.util.ArrayList;
 
+/**
+ * LogicalDirectory
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class LogicalDirectory {
   private EntryDirectory entry;
 

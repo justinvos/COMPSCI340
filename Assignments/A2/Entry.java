@@ -1,3 +1,12 @@
+/**
+ * Entry
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public abstract class Entry {
   public static int LENGTH = 64;
   public static int NUM_ADDRESS = 12;

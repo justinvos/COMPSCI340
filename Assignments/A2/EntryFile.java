@@ -1,3 +1,12 @@
+/**
+ * EntryFile
+ *
+ * Name: Justin Vos
+ * ID: 6914129
+ * UPI: jvos137
+ *
+ * @author      Justin Vos
+ */
 public class EntryFile extends Entry {
   public BlockData[] blocks;
 
