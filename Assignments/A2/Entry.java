@@ -1,6 +1,7 @@
 public abstract class Entry {
   public static int LENGTH = 64;
   public static int NUM_ADDRESS = 12;
+  public static int MAX_NAME_LENGTH = 8;
 
   private boolean isRoot = false;
 

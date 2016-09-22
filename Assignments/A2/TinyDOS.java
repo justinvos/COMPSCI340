@@ -1,30 +1,141 @@
+import java.util.Scanner;
+
 public class TinyDOS {
-  public static boolean isActive = true;
+  public static boolean active = true;
   public static Volume volume;
 
   public static void main(String[] args) {
-    System.out.println("TinyDOS");
+    Scanner in = new Scanner(System.in);
 
-    reconnect("test");
-    ls("/d/");
-    print("/d/info");
-    //mkfile("/d/info");
-    //append("/d/info", "DONE");
-    //delfile("/d/info");
-    deldir("/d/");
+    while(active) {
+      System.out.print("TinyDOS: ");
+      if(volume != null) {
+        System.out.print(volume.getLabel());
+      }
 
-    //LogicalFile logicalFile = new LogicalFile((EntryFile)volume.getEntry("/d/info"));
-    //logicalFile.setContent("Hi again.");
+      System.out.print("$ ");
+      handleInput(in.nextLine());
+      System.out.println();
+    }
+  }
+
+  public static void handleInput(String line) {
+    String[] arg = line.split(" ");
+    String command = arg[0];
+
+    switch(command) {
+      case "format":
+        if(arg.length == 2) {
+          format(arg[1]);
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "reconnect":
+        if(arg.length == 2) {
+          reconnect(arg[1]);
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "ls":
+        if(arg.length == 2) {
+          if(volume != null) {
+            ls(arg[1]);
+          } else {
+            System.out.println("No volume has been loaded");
+          }
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "mkfile":
+        if(arg.length == 2) {
+          if(volume != null) {
+            mkfile(arg[1]);
+          } else {
+            System.out.println("No volume has been loaded");
+          }
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "mkdir":
+        if(arg.length == 2) {
+          if(volume != null) {
+            mkdir(arg[1]);
+          } else {
+            System.out.println("No volume has been loaded");
+          }
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "append":
+        if(arg.length >= 3) {
+          if(volume != null) {
+            String filePath = arg[1];
+            String data = line.substring(line.indexOf("\"") + 1, line.lastIndexOf("\""));
+            append(filePath, data);
+          } else {
+            System.out.println("No volume has been loaded");
+          }
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "print":
+        if(arg.length == 2) {
+          if(volume != null) {
+            print(arg[1]);
+          } else {
+            System.out.println("No volume has been loaded");
+          }
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "delfile":
+        if(arg.length == 2) {
+          if(volume != null) {
+            delfile(arg[1]);
+          } else {
+            System.out.println("No volume has been loaded");
+          }
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "deldir":
+        if(arg.length == 2) {
+          if(volume != null) {
+            deldir(arg[1]);
+          } else {
+            System.out.println("No volume has been loaded");
+          }
+        } else {
+          System.out.println("Incorrect number of arguments");
+        }
+      break;
+      case "quit":
+        quit();
+      break;
+      default:
+        System.out.println(arg[0] + ": command not found");
+      break;
+    }
   }
 
   public static void format(String label) {
     volume = new Volume(label);
     volume.format();
+    System.out.println("Formatting " + label);
   }
 
   public static void reconnect(String label) {
     volume = new Volume(label);
     volume.load();
+    System.out.println("Reconnecting to " + label);
   }
 
   public static void ls(String directoryPath) {
@@ -42,9 +153,7 @@ public class TinyDOS {
   public static void mkfile(String filePath) {
     String directoryPath = filePath.substring(0, filePath.lastIndexOf("/") + 1);
     String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
-
-    System.out.println("Directory:" + directoryPath);
-    System.out.println("File name:" + fileName);
+    fileName = fileName.substring(0, Math.min(fileName.length(), Entry.MAX_NAME_LENGTH));
 
     EntryDirectory entryDirectory = (EntryDirectory)volume.getEntry(directoryPath);
 
@@ -67,9 +176,7 @@ public class TinyDOS {
     String directoryPath = TinyDOS.TrimSlash(fullDirectoryPath);
     String parentDirectoryPath = directoryPath.substring(0, directoryPath.lastIndexOf("/") + 1);
     String directoryName = directoryPath.substring(directoryPath.lastIndexOf("/") + 1);
-
-    System.out.println("Parent directory:" + parentDirectoryPath);
-    System.out.println("Directory name:" + directoryName);
+    directoryName = directoryName.substring(0, Math.min(directoryName.length(), Entry.MAX_NAME_LENGTH));
 
     EntryDirectory entryParentDirectory = (EntryDirectory)volume.getEntry(parentDirectoryPath);
 
@@ -138,7 +245,8 @@ public class TinyDOS {
   }
 
   public static void quit() {
-    isActive = false;
+    active = false;
+    System.out.println("Quitting");
   }
 
 
