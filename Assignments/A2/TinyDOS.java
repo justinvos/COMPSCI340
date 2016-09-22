@@ -28,6 +28,8 @@ public class TinyDOS {
   }
 
   public static void handleInput(String line) {
+    System.out.println();
+
     String[] arg = line.split(" ");
     String command = arg[0];
 

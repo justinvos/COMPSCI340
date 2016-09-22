@@ -27,7 +27,7 @@ public class Drive {
   public Drive(String label) {
     this.label = label;
 
-    file = new File("/home/vos/Documents/university/COMPSCI340/Assignments/A2/" + label + ".drive");
+    file = new File(label + ".drive");
     memory = new String[Drive.BLOCK_NUM];
 
 

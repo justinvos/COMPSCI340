@@ -1,0 +1,42 @@
+Name: Justin Vos
+ID: 6914129
+UPI: jvos137
+
+
+=== Question 1 ===
+First compile the code using:
+javac *.java
+
+Then, execute TinyDOS normally using:
+java TinyDOS
+
+To execute TinyDOS and pipe commands in from "commands.txt", use:
+java TinyDOS < commands.txt
+
+
+=== Question 2 ===
+The highest number of files is 111.
+
+I started by filling the volume info block (Block 0) with 6 directories and denoted them a, b, c, d, e and f.
+If I filled these directories with files each with only 1 data block, I would get only:
+Number of files blocks = 6 first-level directories * 8 files = 48 file blocks
+Number of directory blocks = 1 Volume info + 6 first-level directories = 7 directory blocks
+Number of blocks = Number of files blocks + Number of directory blocks = 48 file blocks + 7 directory blocks = 55 blocks
+
+With much more space to fill, I filled a instead with directories and those second-level directories with files, giving me:
+Number of files blocks = 5 first-level directories * 8 files + 8 second-level directories * 8 files = 104 file blocks
+Number of directory blocks = 1 Volume info + 6 first-level directories + 8 second-level directories = 15 directory blocks
+Number of blocks = Number of files blocks + Number of directory blocks = 104 file blocks + 15 directory blocks = 104 blocks
+
+And finally, changing one directory b's file into a directory results in:
+Number of files blocks = 4 first-level directories * 8 files + 9 second-level directories * 8 files + 7 b's files = 111 file blocks
+Number of directory blocks = 1 Volume info + 6 first-level directories + 9 second-level directories = 16 directory blocks
+Number of blocks = Number of files blocks + Number of directory blocks = 111 file blocks + 16 directory blocks = 127 blocks
+
+Any more directories results in less blocks for files and so therfore 111 file blocks is the maximum.
+
+=== Question 3 ===
+No, my program would break because many of my operations are not atomic and would result in unsynchronisation between the threads.
+E.g. if thread A is appending data to a file, there are many operations that take place in order to make this happen. If another thread
+deletes that file during these operations, it would no longer appear as a child to its parent directory and this would cause a
+NullPointerException when for example its parent calls teh child file to calculate its new size.
