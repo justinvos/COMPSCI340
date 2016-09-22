@@ -37,6 +37,17 @@ public class BlockDirectory extends Block {
     return entries.length;
   }
 
+  public int size() {
+    int size = 0;
+    for(int index = 0; index < entries.length; index++) {
+      Entry entry = get(index);
+      if(entry != null) {
+        size += entry.size();
+      }
+    }
+    return size;
+  }
+
   public Entry get(int index) {
     return entries[index];
   }

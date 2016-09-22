@@ -37,6 +37,21 @@ public class EntryFile extends Entry {
     return blocks.length;
   }
 
+  public int size() {
+    int size = 0;
+    for(int slot = 0; slot < blocks.length; slot++) {
+      BlockData block = get(slot);
+      if(block != null) {
+        size += block.length();
+      }
+    }
+    if(getSize() != size) {
+      setSize(size);
+      write();
+    }
+    return size;
+  }
+
   @Override
   public String toString() {
     String output = "f:";

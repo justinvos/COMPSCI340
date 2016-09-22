@@ -61,6 +61,8 @@ public abstract class Entry {
     getParent().write();
   }
 
+  public abstract int size();
+
   public int getSize() {
     return size;
   }

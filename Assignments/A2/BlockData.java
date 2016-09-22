@@ -16,6 +16,10 @@ public class BlockData extends Block {
     write();
   }
 
+  public int length() {
+    return data.length();
+  }
+
   @Override
   public boolean isEmpty() {
     return data.equals(Block.EMPTY);

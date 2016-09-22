@@ -15,6 +15,10 @@ public class LogicalFile {
     }
   }
 
+  public int size() {
+    return entry.size();
+  }
+
   public int length() {
     return content.length();
   }
@@ -51,6 +55,8 @@ public class LogicalFile {
         }
       }
     }
+    entry.setSize(size());
+    entry.getParent().write();
   }
 
   public void appendContent(String content) {

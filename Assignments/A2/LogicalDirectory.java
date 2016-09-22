@@ -36,6 +36,10 @@ public class LogicalDirectory {
     return children.size();
   }
 
+  public int size() {
+    return entry.size();
+  }
+
   public int findChild(String name) {
     for(int childIndex = 0; childIndex < length(); childIndex++) {
       if(getChild(childIndex).getName().equals(name)) {
