@@ -80,7 +80,6 @@ public class Drive {
   }
 
   public void write(Block block) {
-    System.out.println("WRITING:" + block.toString() + "@" + block.getAddress());
     memory[block.getAddress()] = block.toString();
     flush();
   }

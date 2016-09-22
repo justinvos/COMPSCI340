@@ -7,12 +7,17 @@ public class TinyDOS {
     volume = new Volume("test");
     volume.load();
 
+    String newDirPath = "/d/novo";
+    String dirPath = "/d/";
+    String name = "novo";
 
-    LogicalDirectory dir = new LogicalDirectory(volume.getRoot());
+
+    LogicalDirectory dir = new LogicalDirectory((EntryDirectory)volume.getEntry(dirPath));
     System.out.println(dir);
 
+    System.out.println(dir.makeDirectory(name));
 
-    System.out.println(dir.makeDirectory("d"));
+    System.out.println(dir);
   }
 
 
