@@ -15,10 +15,11 @@ public class BlockDirectory extends Block {
 
   public BlockDirectory(int address) {
     this(address, BlockDirectory.DEFAULT_ENTRY_NUM);
+    write();
   }
 
   public static BlockDirectory Parse(int address) {
-    BlockDirectory directory = new BlockDirectory(address);
+    BlockDirectory directory = new BlockDirectory(address, BlockVolumeInfo.DEFAULT_ENTRY_NUM);
 
     if(address == 0) {
       directory = new BlockDirectory(address, BlockVolumeInfo.VOLUME_INFO_ENTRY_NUM);

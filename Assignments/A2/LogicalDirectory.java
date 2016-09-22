@@ -56,7 +56,14 @@ public class LogicalDirectory {
 
     for(int slot = 0; slot < entry.length(); slot++) {
       BlockDirectory block = entry.get(slot);
-      int index = block.findEmpty();
+      int index = 0;
+      if(block == null) {
+        entry.set(slot, new BlockDirectory(TinyDOS.volume.getEmptyBlock()));
+        entry.getParent().write();
+      } else {
+        index = block.findEmpty();
+      }
+
       if(index != -1) {
         System.out.println("Free");
 
@@ -73,8 +80,28 @@ public class LogicalDirectory {
     return null;
   }
 
-  public void makeDirectory(String name) {
+  public EntryDirectory makeDirectory(String name) {
+    if(hasChild(name)){
+      return null;
+    }
 
+    for(int slot = 0; slot < entry.length(); slot++) {
+      BlockDirectory block = entry.get(slot);
+      int index = block.findEmpty();
+      if(index != -1) {
+        System.out.println("Free");
+
+        EntryDirectory directory = new EntryDirectory(block, index);
+        directory.setName(name);
+        directory.getParent().set(directory.getIndex(), directory);
+
+        children.add(directory);
+
+        directory.getParent().write();
+        return directory;
+      }
+    }
+    return null;
   }
 
   @Override
@@ -85,7 +112,7 @@ public class LogicalDirectory {
       Entry child = getChild(childIndex);
 
       if(child.isDirectory()) {
-        output += "\ndir ";
+        output += "\ndir  ";
       } else {
         output += "\nfile ";
       }

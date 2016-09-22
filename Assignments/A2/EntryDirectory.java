@@ -23,7 +23,7 @@ public class EntryDirectory extends Entry {
     for(int slot = 0; slot < stringAddresses.length; slot++) {
       int address = Integer.parseInt(stringAddresses[slot]);
       if(address != 0) {
-        entry.set(slot, new BlockDirectory(address));
+        entry.set(slot, BlockDirectory.Parse(address));
       }
     }
 
