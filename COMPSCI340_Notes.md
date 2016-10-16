@@ -127,3 +127,17 @@ The **logical address space** is the set of all logical addresses.
 The **physical address space** is the set of all physical addresses.
 
 The **memory-management unit** (MMU) is a hardware device for mapping from logical addresses to physcial addresses. It uses a relocation register as a base so that the logical address space $[0,\text{max}]$ is mapped to the physical address space $[R + 0, R + \text{max}]$ where $R$ is the relocation register value.
+
+With **dynamic loading**, a routine is not loaded until it is called.
+
+**Dynamically linked libraries** are system libraries that are linked to user programs when the programs are run.
+
+**Static linking** is where system libraries are combined by the loader into the binary program.
+
+A **stub** is a small piece of code that indicate how to locate and link a library routine.
+
+A process can be **swapped** temporarily out of memory into a backing store and then brought back into memory for continued execution. Swapping allows for the address space of all processes to exceed the real physical memory of the system.
+
+The **ready queue** consists of all processes whose memory images are on the backing store or in memory and are ready to be run.
+
+**Double buffering** is where I/O operations are transferred with operating system buffers, which is then transferred to the process buffer. This solves any issues where a process waiting for I/O is swapped out leaving the I/O no buffer to transfer to.
