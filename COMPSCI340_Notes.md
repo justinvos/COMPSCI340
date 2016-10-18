@@ -141,3 +141,20 @@ A process can be **swapped** temporarily out of memory into a backing store and 
 The **ready queue** consists of all processes whose memory images are on the backing store or in memory and are ready to be run.
 
 **Double buffering** is where I/O operations are transferred with operating system buffers, which is then transferred to the process buffer. This solves any issues where a process waiting for I/O is swapped out leaving the I/O no buffer to transfer to.
+
+Memory can be divided into **chunks** to allow memory to be non-contiguous.  
+A **page** is a logical chunk of memory.  
+A **frame** is a physical chunk of memory.
+
+
+**Segments** allow for variably sized chunks.
+
+The **translation look-aside buffer** (TLB) offers fast lookup checks on the frame number of a particular page.
+
+**TLB coverage** refers to the portion of the memory that is stored in the translation look-aside buffer.
+
+**Demand paging** only brings a page into real memory when the page is used by the process.
+
+The **working set** of a process is the set of all pages needed to keep the process running.
+
+**Inactive memory** is the memory of of recent resources that are no longer needed. The reason it sticks around instead of being deleted is because there is a significant chance that the computer will need that resource again and keeping it around makes the repeated read much faster.
